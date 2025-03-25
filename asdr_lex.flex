@@ -36,7 +36,7 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 
 [:jdigit:]+(\.[:jdigit:]+)? 	{ return AsdrSample.NUM; }
 
-":" |
+";" |
 "(" |
 ")" |
 "{" |
