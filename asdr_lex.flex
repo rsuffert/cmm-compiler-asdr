@@ -22,23 +22,31 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 "$TRACE_ON"   { yyparser.setDebug(true); }
 "$TRACE_OFF"  { yyparser.setDebug(false); }
 
-"while"	 	{ return AsdrSample.WHILE; }
-"if"		{ return AsdrSample.IF; }
-"else"		{ return AsdrSample.ELSE; }
-"fi"		{ return AsdrSample.FI; }
+"int"     |
+"double"  |
+"boolean" { return AsdrSample.TYPE; }
+"VOID"    { return AsdrSample.VOID; }
+
+"FUNC"  { return AsdrSample.FUNC; }
+"while" { return AsdrSample.WHILE; }
+"if"    { return AsdrSample.IF; }
+"else"  { return AsdrSample.ELSE; }
 
 [:jletter:][:jletterdigit:]* { return AsdrSample.IDENT; }  
 
-[0-9]+ 	{ return AsdrSample.NUM; }
+[:jdigit:]+(\.[:jdigit:]+)? 	{ return AsdrSample.NUM; }
 
-"{" |
-"}" |
-";" |
+":" |
 "(" |
 ")" |
+"{" |
+"}" |
+"," |
+"=" |
 "+" |
-"="    	{ return yytext().charAt(0); } 
-
+"-" |
+"*" |
+"/" { return yytext().charAt(0); } 
 
 {WHITE_SPACE_CHAR}+ { }
 
