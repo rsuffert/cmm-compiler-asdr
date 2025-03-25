@@ -50,4 +50,10 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 
 {WHITE_SPACE_CHAR}+ { }
 
-. { System.out.println("Erro lexico: caracter invalido: <" + yytext() + ">"); }
+. {
+  System.err.println(String.format(
+      "%sLEXICAL ERROR: invalid token '%s' at (%d,%d)%s",
+      ConsoleColors.RED, yytext(), yyline, yychar, ConsoleColors.RESET
+  ));
+  System.exit(1);
+}

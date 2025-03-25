@@ -333,9 +333,10 @@ public class AsdrSample {
 
     /* metodo de manipulacao de erros de sintaxe */
     public void yyerror (String error) {
-        System.err.println("Erro: " + error);
-        System.err.println("Entrada rejeitada");
-        System.out.println("\n\nFalhou!!!");
+        System.err.println(String.format(
+            "%sSYNTAX ERROR: %s%s",
+            ConsoleColors.RED, error, ConsoleColors.RESET
+        ));
         System.exit(1);
     }
 
@@ -366,10 +367,14 @@ public class AsdrSample {
 
             parser.Prog(); // root of the grammar
 
-            if (laToken== Yylex.YYEOF)
-                System.out.println("\n\nSucesso!");
-            else     
-                System.out.println("\n\nFalhou - esperado EOF.");               
+            if (laToken != Yylex.YYEOF)
+                parser.yyerror("esperado o fim do arquivo (EOF) na entrada");    
+            
+            System.out.println();
+            System.out.println(String.format(
+                "%sSUCCESS: PROGRAM IS RECOGNIZED AND IS PART OF THE LANGUAGE!%s",
+                ConsoleColors.GREEN, ConsoleColors.RESET
+            ));
         }
         catch (java.io.FileNotFoundException e) {
             System.out.println("File not found : \""+args[0]+"\"");
