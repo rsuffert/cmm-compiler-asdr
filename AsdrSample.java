@@ -341,7 +341,7 @@ public class AsdrSample {
     }
 
     public void setDebug(boolean trace) {
-        debug = true;
+        debug = trace;
     }
 
     /**
