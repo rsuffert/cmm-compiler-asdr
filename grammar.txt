@@ -9,8 +9,10 @@ DeclVar --> Tipo ListaIdent ';' DeclVar
 
 Tipo --> int | double | boolean
 
-ListaIdent --> IDENT , ListaIdent  
-            | IDENT      
+ListaIdent --> IDENT RestoListaIdent
+
+RestoListaIdent --> , ListaIdent
+                | /* vazio */
 
 DeclFun --> FUNC tipoOuVoid IDENT '(' FormalPar ')' '{' DeclVar ListaCmd '}' DeclFun
         | /* vazio */
@@ -19,8 +21,10 @@ TipoOuVoid --> Tipo | VOID
 
 FormalPar -> paramList | /* vazio */
 
-paramList --> Tipo IDENT , ParamList
-            | Tipo IDENT 
+paramList --> Tipo IDENT RestoParamList
+
+RestoParamList --> , paramList
+                | /* vazio */
 
 Bloco --> { ListaCmd }
 

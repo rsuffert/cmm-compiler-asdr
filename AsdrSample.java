@@ -32,6 +32,272 @@ public class AsdrSample {
         lexer = new Yylex (r, this);
     }
 
+    // ====================================== GRAMMAR ======================================
+    private void Prog() {
+        if (debug) System.out.println("Prog --> ListaDecl");
+        ListaDecl();
+    }
+
+    private void ListaDecl() {
+        if (laToken == TYPE) {
+            if (debug) System.out.println("ListaDecl --> DeclVar ListaDecl");
+            DeclVar();
+            ListaDecl();
+        }
+        else if (laToken == FUNC) {
+            if (debug) System.out.println("ListaDecl --> DeclFunc ListaDecl");
+            DeclFun();
+            ListaDecl();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("ListaDecl --> *vazio*");
+        }
+    }
+
+    private void DeclVar() {
+        if (laToken == TYPE) {
+            if (debug) System.out.println("DeclVar --> TYPE IDENT ;");
+            verifica(TYPE);
+            ListaIdent();
+            verifica(';');
+            DeclVar();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("DeclVar --> *vazio*");
+        }
+    }
+
+    private void DeclFun() {
+        if (laToken == FUNC) {
+            if (debug) System.out.println("DeclFun --> FUNC tipoOuVoid IDENT '(' FormalPar ')' '{' DeclVar ListaCmd '}' DeclFun");
+            verifica(FUNC);
+            tipoOuVoid();
+            verifica(IDENT);
+            verifica('(');
+            FormalPar();
+            verifica(')');
+            verifica('{');
+            DeclVar();
+            ListaCmd();
+            verifica('}');
+            DeclFun();
+        } else {
+            // aceitar como vazio
+            if (debug) System.out.println("DeclFun --> *vazio*");
+        }
+    }
+
+    private void ListaIdent() {
+        if (laToken == IDENT) {
+            if (debug) System.out.println("ListaIdent --> IDENT RestoListaIdent");
+            verifica(IDENT);
+            RestoListaIdent();
+        }
+        else {
+            this.yyerror("esperado IDENT na entrada");
+        }
+    }
+
+    private void RestoListaIdent() {
+        if (laToken == ',') {
+            if (debug) System.out.println("RestoListaIdent --> , ListaIdent");
+            verifica(',');
+            ListaIdent();
+        } else {
+            // aceitar como vazio
+            if (debug) System.out.println("RestoListaIdent --> *vazio*");
+        }
+    }
+
+    private void tipoOuVoid() {
+        if (laToken == TYPE) {
+            if (debug) System.out.println("tipoOuVoid --> TYPE");
+            verifica(TYPE);
+        } else if (laToken == VOID) {
+            if (debug) System.out.println("tipoOuVoid --> VOID");
+            verifica(VOID);
+        } else {
+            this.yyerror("esperado TYPE ou VOID na entrada");
+        }
+    }
+
+    private void FormalPar() {
+        if (laToken == TYPE) {
+            if (debug) System.out.println("FormalPar --> paramList");
+            paramList();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("FormalPar --> *vazio*");
+        }
+    }
+
+    private void ListaCmd() {
+        if (cmdFirst()) {
+            if (debug) System.out.println("ListaCmd --> Cmd ListaCmd");
+            Cmd();
+            ListaCmd();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("ListaCmd --> *vazio*");
+        }
+    }
+
+    private void paramList() {
+        if (laToken == TYPE) {
+            if (debug) System.out.println("paramList --> TYPE IDENT RestoParamList");
+            verifica(TYPE);
+            verifica(IDENT);
+            RestoParamList();
+        } else {
+            this.yyerror("esperado TYPE na entrada");
+        }
+    }
+
+    private void RestoParamList() {
+        if (laToken == ',') {
+            if (debug) System.out.println("RestoParamList --> ',' paramList");
+            verifica(',');
+            paramList();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("RestoParamList --> *vazio*");
+        }
+    }
+
+    private void Bloco() {
+        verifica('{');
+        ListaCmd();
+        verifica('}');
+    }
+
+    private void Cmd() {
+        if (blocoFirst()) {
+            if (debug) System.out.println("Cmd --> Bloco");
+            Bloco();
+        }
+        else if (laToken == WHILE) {
+            if (debug) System.out.println("Cmd --> WHILE '(' E ')' Cmd");
+            verifica(WHILE);
+            verifica('(');
+            E();
+            verifica(')');
+            Cmd();
+        }
+        else if (laToken == IDENT) {
+            if (debug) System.out.println("Cmd --> IDENT '=' E");
+            verifica(IDENT);
+            verifica('=');
+            E();
+        }
+        else if (laToken == IF) {
+            if (debug) System.out.println("Cmd --> IF '(' E ')' Cmd RestoIf");
+            verifica(IF);
+            verifica('(');
+            E();
+            verifica(')');
+            Cmd();
+            RestoIf();
+        }
+        else {
+            this.yyerror("esperado BLOCO, WHILE, IDENT ou IF na entrada");
+        }
+    }
+
+    private void E() {
+        T();
+        RE();
+    }
+
+    private void RestoIf() {
+        if (laToken == ELSE) {
+            if (debug) System.out.println("RestoIf --> ELSE Cmd");
+            verifica(ELSE);
+            Cmd();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("RestoIf --> *vazio*");
+        }
+
+    }
+
+    public void T() {
+        F();
+        RT();
+    }
+
+    public void RE() {
+        if (laToken == '+') {
+            if (debug) System.out.println("RE --> '+' T RE");
+            verifica('+');
+            T();
+            RE();
+        }
+        else if (laToken == '-') {
+            if (debug) System.out.println("RE --> '-' T RE");
+            verifica('-');
+            T();
+            RE();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("RE --> *vazio*");
+        }
+    }
+
+    public void F() {
+        if (laToken == IDENT) {
+            if (debug) System.out.println("F --> IDENT");
+            verifica(IDENT);
+        }
+        else if (laToken == NUM) {
+            if (debug) System.out.println("F --> NUM");
+            verifica(NUM);
+        }
+        else if (laToken == '(') {
+            if (debug) System.out.println("F --> '(' E ')'");
+            verifica('(');
+            E();
+            verifica(')');
+        }
+        else {
+            this.yyerror("esperado IDENT, NUM ou '(' na entrada");
+        }
+    }
+
+    public void RT() {
+        if (laToken == '*') {
+            if (debug) System.out.println("RT --> '*' F RT");
+            verifica('*');
+            F();
+            RT();
+        }
+        else if (laToken == '/') {
+            if (debug) System.out.println("RT --> '/' F RT");
+            verifica('/');
+            F();
+            RT();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("RT --> *vazio*");
+        }
+    }
+
+    // ====================================== HELPERS ======================================
+    private boolean cmdFirst() {
+        return laToken == IDENT || laToken == WHILE || laToken == IF || blocoFirst();
+    }
+
+    private boolean blocoFirst() {
+        return laToken == '{';
+    }
+    
     private void verifica(int expected) {
         if (laToken == expected) {
             laToken = this.yylex();
@@ -98,7 +364,7 @@ public class AsdrSample {
             parser.setDebug(false);
             laToken = parser.yylex();          
 
-            // parser.Prog() // root of the grammar
+            parser.Prog(); // root of the grammar
 
             if (laToken== Yylex.YYEOF)
                 System.out.println("\n\nSucesso!");
