@@ -3,20 +3,23 @@ import java.io.*;
 public class AsdrSample {
     public static final int BASE_TOKEN_NUM = 301;
 
-    public static final int TYPE = 301;
-    public static final int VOID = 302;
+    public static final int INT     = 301;
+    public static final int DOUBLE  = 302;
+    public static final int BOOLEAN = 303;
+    public static final int VOID    = 304;
 
-    public static final int IDENT = 303;
+    public static final int IDENT = 305;
 
-    public static final int FUNC  = 304;
-    public static final int WHILE = 305;
-    public static final int IF    = 306;
-    public static final int ELSE  = 307;
+    public static final int FUNC  = 306;
+    public static final int WHILE = 307;
+    public static final int IF    = 308;
+    public static final int ELSE  = 309;
 
-    public static final int NUM = 308;
+    public static final int NUM = 310;
 
     public static final String tokenList[] = {
-        "TYPE", "VOID", "IDENT", "FUNC", "WHILE", "IF", "ELSE", "NUM"
+        "INT", "DOUBLE", "BOOLEAN", "VOID", "IDENT",
+        "FUNC", "WHILE", "IF", "ELSE", "NUM",
     };
                                       
     /* referencia ao objeto Scanner gerado pelo JFLEX */
@@ -39,7 +42,7 @@ public class AsdrSample {
     }
 
     private void ListaDecl() {
-        if (laToken == TYPE) {
+        if (typeFirst()) {
             if (debug) System.out.println("ListaDecl --> DeclVar ListaDecl");
             DeclVar();
             ListaDecl();
@@ -56,9 +59,9 @@ public class AsdrSample {
     }
 
     private void DeclVar() {
-        if (laToken == TYPE) {
+        if (typeFirst()) {
             if (debug) System.out.println("DeclVar --> TYPE IDENT ;");
-            verifica(TYPE);
+            verificaType();
             ListaIdent();
             verifica(';');
             DeclVar();
@@ -112,9 +115,9 @@ public class AsdrSample {
     }
 
     private void tipoOuVoid() {
-        if (laToken == TYPE) {
+        if (typeFirst()) {
             if (debug) System.out.println("tipoOuVoid --> TYPE");
-            verifica(TYPE);
+            verificaType();
         } else if (laToken == VOID) {
             if (debug) System.out.println("tipoOuVoid --> VOID");
             verifica(VOID);
@@ -124,7 +127,7 @@ public class AsdrSample {
     }
 
     private void FormalPar() {
-        if (laToken == TYPE) {
+        if (typeFirst()) {
             if (debug) System.out.println("FormalPar --> paramList");
             paramList();
         }
@@ -147,9 +150,9 @@ public class AsdrSample {
     }
 
     private void paramList() {
-        if (laToken == TYPE) {
+        if (typeFirst()) {
             if (debug) System.out.println("paramList --> TYPE IDENT RestoParamList");
-            verifica(TYPE);
+            verificaType();
             verifica(IDENT);
             RestoParamList();
         } else {
@@ -296,6 +299,17 @@ public class AsdrSample {
 
     private boolean blocoFirst() {
         return laToken == '{';
+    }
+
+    private boolean typeFirst() {
+        return (laToken == INT) || (laToken == DOUBLE) || (laToken == BOOLEAN);
+    }
+
+    private void verificaType() {
+        if (laToken != INT && laToken != DOUBLE && laToken != BOOLEAN) {
+            this.yyerror("esperado INT, DOUBLE ou BOOLEAN na entrada");
+        }
+        laToken = this.yylex();
     }
     
     private void verifica(int expected) {

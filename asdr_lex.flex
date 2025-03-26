@@ -22,9 +22,9 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 "$TRACE_ON"   { yyparser.setDebug(true); }
 "$TRACE_OFF"  { yyparser.setDebug(false); }
 
-"int"     |
-"double"  |
-"boolean" { return AsdrSample.TYPE; }
+"int"     { return AsdrSample.INT; }
+"double"  { return AsdrSample.DOUBLE; }
+"boolean" { return AsdrSample.BOOLEAN; }
 "VOID"    { return AsdrSample.VOID; }
 
 "FUNC"  { return AsdrSample.FUNC; }
