@@ -196,6 +196,7 @@ public class AsdrSample {
             verifica(IDENT);
             verifica('=');
             E();
+            verifica(';');
         }
         else if (laToken == IF) {
             if (debug) System.out.println("Cmd --> IF '(' E ')' Cmd RestoIf");

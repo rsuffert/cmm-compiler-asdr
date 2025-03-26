@@ -16,6 +16,7 @@
 %char
 
 WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
+ALGARISM=[0-9]
 
 %%
 
@@ -34,7 +35,7 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 
 [:jletter:][:jletterdigit:]* { return AsdrSample.IDENT; }  
 
-[:jdigit:]+(\.[:jdigit:]+)? 	{ return AsdrSample.NUM; }
+{ALGARISM}+(\.{ALGARISM}+)?  { return AsdrSample.NUM; }
 
 ";" |
 "(" |
