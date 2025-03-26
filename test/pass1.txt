@@ -1,0 +1,8 @@
+$TRACE_ON
+int a, b, c;
+
+func boolean foo() {
+    int x;
+
+    x = 10.9;
+}
