@@ -25,9 +25,9 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 "int"     { return AsdrSample.INT; }
 "double"  { return AsdrSample.DOUBLE; }
 "boolean" { return AsdrSample.BOOLEAN; }
-"VOID"    { return AsdrSample.VOID; }
+"void"    { return AsdrSample.VOID; }
 
-"FUNC"  { return AsdrSample.FUNC; }
+"func"  { return AsdrSample.FUNC; }
 "while" { return AsdrSample.WHILE; }
 "if"    { return AsdrSample.IF; }
 "else"  { return AsdrSample.ELSE; }
