@@ -220,6 +220,7 @@ public class AsdrSample {
 
     private void E() {
         if (TFirst()) {
+            if (debug) System.out.println("E --> T RE");
             T();
             RE();
         } else {
@@ -242,6 +243,7 @@ public class AsdrSample {
 
     public void T() {
         if (FFirst()) {
+            if (debug) System.out.println("T --> F RT");
             F();
             RT();
         } else {
