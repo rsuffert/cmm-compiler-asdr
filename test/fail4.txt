@@ -1,0 +1,12 @@
+$TRACE_ON
+
+func int bar() {
+    int count;
+    boolean inc;
+    count = 0;
+    while (true
+        if (inc) {
+            count = count + 1;
+        }
+    }
+}

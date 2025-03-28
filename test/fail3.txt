@@ -1,0 +1,5 @@
+func boolean foo(int p1 double p2) {
+    int x;
+
+    x = 10;
+}

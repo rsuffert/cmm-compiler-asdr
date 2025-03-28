@@ -1,0 +1,25 @@
+$TRACE_ON
+
+int a, b, c;
+double d;
+
+func boolean foo(int p1, double p2) {
+    int x;
+
+    x=10;
+
+    if(x) {
+        x = 0;
+    }
+}
+
+func int bar() {
+    int count;
+    boolean inc;
+    count = 0;
+    while (true) {
+        if (inc) {
+            count = count + 1;
+        }
+    }
+}
