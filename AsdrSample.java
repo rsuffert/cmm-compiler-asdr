@@ -37,8 +37,14 @@ public class AsdrSample {
 
     // ====================================== GRAMMAR ======================================
     private void Prog() {
-        if (debug) System.out.println("Prog --> ListaDecl");
-        ListaDecl();
+        if (listaDeclFirst()) {
+            if (debug) System.out.println("Prog --> ListaDecl");
+            ListaDecl();
+        }
+        else {
+            // aceitar como vazio
+            if (debug) System.out.println("Prog --> *vazio*");
+        }
     }
 
     private void ListaDecl() {
@@ -213,8 +219,12 @@ public class AsdrSample {
     }
 
     private void E() {
-        T();
-        RE();
+        if (TFirst()) {
+            T();
+            RE();
+        } else {
+            this.yyerror("esperado IDENT, NUM ou ( na entrada");
+        }
     }
 
     private void RestoIf() {
@@ -231,8 +241,12 @@ public class AsdrSample {
     }
 
     public void T() {
-        F();
-        RT();
+        if (FFirst()) {
+            F();
+            RT();
+        } else {
+            this.yyerror("esperado IDENT, NUM ou ( na entrada");
+        }
     }
 
     public void RE() {
@@ -304,6 +318,18 @@ public class AsdrSample {
 
     private boolean typeFirst() {
         return (laToken == INT) || (laToken == DOUBLE) || (laToken == BOOLEAN);
+    }
+
+    private boolean listaDeclFirst() {
+        return laToken == INT || laToken == DOUBLE || laToken == BOOLEAN || laToken == FUNC;
+    }
+
+    private boolean TFirst() {
+        return FFirst();
+    }
+
+    private boolean FFirst() {
+        return laToken == IDENT || laToken == NUM || laToken == '(';
     }
 
     private void verificaType() {
