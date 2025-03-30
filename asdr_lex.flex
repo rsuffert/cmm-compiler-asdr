@@ -1,5 +1,12 @@
 %%
 
+/*
+ * Lexical analyzer for the fictional C-- programming language.
+ * @author Alexandre Agustini
+ * @author Ricardo Süffert
+ * @author Gustavo Molina
+ */
+
 %{
   private AsdrSample yyparser;
 
@@ -16,7 +23,7 @@
 %char
 
 WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
-ALGARISM=[0-9]
+DIGIT=[0-9]
 
 %%
 
@@ -35,7 +42,7 @@ ALGARISM=[0-9]
 
 [:jletter:][:jletterdigit:]* { return AsdrSample.IDENT; }  
 
-{ALGARISM}+(\.{ALGARISM}+)?  { return AsdrSample.NUM; }
+{DIGIT}+(\.{DIGIT}+)?  { return AsdrSample.NUM; }
 
 ";" |
 "(" |

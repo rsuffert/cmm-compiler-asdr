@@ -1,5 +1,11 @@
 import java.io.*;
 
+/*
+ * Recursive descent syntax analyzer for the fictional C-- language, whose grammar is defined in the ./grammar.txt file.
+ * @author Alexandre Agustini
+ * @author Ricardo Süffert
+ * @author Gustavo Molina
+ */
 public class AsdrSample {
     public static final int BASE_TOKEN_NUM = 301;
 
